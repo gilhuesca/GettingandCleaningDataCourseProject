@@ -27,7 +27,8 @@ colnames(activities) <-auxColNames
 
 #loading subject test
 subjectTest <- read.table(pasteHome("test/subject_test.txt"))
-auxColNames <- c("subject")
+subjectTest <- cbind(subjectTest, rep("Test",nrow(subjectTest)))
+auxColNames <- c("subject","type")
 colnames(subjectTest) <-auxColNames
 
 #loading x test
@@ -35,9 +36,10 @@ xTest <- read.table(pasteHome("test/X_test.txt"))
 auxColNames <- features$feature
 colnames(xTest) <-auxColNames
 
+
 #loading y test
 yTest <- read.table(pasteHome("test/y_test.txt"))
-auxColNames <- c("yTest")
+auxColNames <- c("yT")
 colnames(yTest) <-auxColNames
 
 
@@ -46,7 +48,8 @@ colnames(yTest) <-auxColNames
 
 #loading subject train
 subjectTrain <- read.table(pasteHome("train/subject_train.txt"))
-auxColNames <- c("subject")
+subjectTrain <- cbind(subjectTrain, rep("Train",nrow(subjectTrain)))
+auxColNames <- c("subject","type")
 colnames(subjectTrain) <-auxColNames
 
 #loading x train
@@ -56,5 +59,21 @@ colnames(xTrain) <-auxColNames
 
 #loading y test
 yTrain <- read.table(pasteHome("train/y_train.txt"))
-auxColNames <- c("yTrain")
+auxColNames <- c("yT")
 colnames(yTrain) <-auxColNames
+
+
+#########
+#Merging
+
+#merging subjects
+subjects <- rbind(subjectTest,subjectTrain)
+
+#merging X
+Xs <- rbind(xTest,xTrain)
+
+#merging Y
+Ys <- rbind(yTest,yTrain)
+
+#merging all
+merged <- cbind(subjects,Xs,Ys)
