@@ -77,3 +77,33 @@ Ys <- rbind(yTest,yTrain)
 
 #merging all
 merged <- cbind(subjects,Xs,Ys)
+
+
+#########
+#getting only mean and standard deviation
+library(dplyr)
+meanAndStd<-select(merged,subject,type,yT,contains("mean"),contains("std"))
+
+
+#########
+#changing codes for activity names
+meanAndStd$yT <- activities[meanAndStd$yT, 2]
+
+
+#########
+#renaming columns
+meanAndStd<-rename(meanAndStd,activity=yT)
+meanAndStd<-rename(meanAndStd,type=Type)
+
+names <- names(meanAndStd)
+
+names <- sub("Acc", "Accelerometer",names)
+names <- sub("Gyro", "Gyroscope",names)
+names <- sub("^[t]", "Time",names)
+names <- sub("\\(t", "(Time",names)
+names <- sub("^f", "Frequency",names)
+names <- sub("^a", "A",names)
+names <- sub("Mag", "Magnitude",names)
+names <- sub("BodyBody", "Body",names)
+
+colnames(meanAndStd) <- names
