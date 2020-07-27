@@ -27,8 +27,7 @@ colnames(activities) <-auxColNames
 
 #loading subject test
 subjectTest <- read.table(pasteHome("test/subject_test.txt"))
-subjectTest <- cbind(subjectTest, rep("Test",nrow(subjectTest)))
-auxColNames <- c("subject","type")
+auxColNames <- c("subject")
 colnames(subjectTest) <-auxColNames
 
 #loading x test
@@ -48,8 +47,7 @@ colnames(yTest) <-auxColNames
 
 #loading subject train
 subjectTrain <- read.table(pasteHome("train/subject_train.txt"))
-subjectTrain <- cbind(subjectTrain, rep("Train",nrow(subjectTrain)))
-auxColNames <- c("subject","type")
+auxColNames <- c("subject")
 colnames(subjectTrain) <-auxColNames
 
 #loading x train
@@ -82,7 +80,7 @@ merged <- cbind(subjects,Xs,Ys)
 #########
 #getting only mean and standard deviation
 library(dplyr)
-meanAndStd<-select(merged,subject,type,yT,contains("mean"),contains("std"))
+meanAndStd<-select(merged,subject,yT,contains("mean"),contains("std"))
 
 
 #########
@@ -93,7 +91,6 @@ meanAndStd$yT <- activities[meanAndStd$yT, 2]
 #########
 #renaming columns
 meanAndStd<-rename(meanAndStd,activity=yT)
-meanAndStd<-rename(meanAndStd,type=Type)
 
 names <- names(meanAndStd)
 
@@ -107,3 +104,12 @@ names <- sub("Mag", "Magnitude",names)
 names <- sub("BodyBody", "Body",names)
 
 colnames(meanAndStd) <- names
+
+
+#######
+#average of each variable for each activity and each subject.
+
+lastTable <- group_by(meanAndStd,subject,Activity)
+lastTable <- summarise_all(lastTable,c("mean"))
+
+write.table(lastTable, "lastTable.txt", row.name=FALSE)
